@@ -53,6 +53,17 @@ button.danger:hover { background: #f8efec; }
 /* filters */
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center; }
 .filters select, .filters input { font-size: 13px; }
+#btn-del-selected { margin-left: auto; }
+
+/* manual sort & selection */
+.handle-col { display: none; white-space: nowrap; }
+table.manual .handle-col { display: table-cell; }
+.drag-handle { cursor: grab; color: #a68d6c; font-size: 16px; padding: 0 3px; user-select: none; }
+.mini-move { border: none; background: none; box-shadow: none; color: #8a7358; cursor: pointer; font-size: 12px; padding: 1px 4px; border-radius: 4px; }
+.mini-move:hover { background: #f0e8da; transform: none; box-shadow: none; }
+tr.drag-over td { border-top: 2px solid #a68d6c; }
+.sel-col { width: 36px; text-align: center; }
+input[type=checkbox] { accent-color: #a68d6c; width: 15px; height: 15px; vertical-align: -2px; }
 
 /* table */
 .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e4d9c6; }
@@ -80,25 +91,29 @@ tr.done .task-title { text-decoration: line-through; }
 /* calendar */
 .cal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .cal-header .month-label { font-family: "Cormorant Garamond", "Zen Kaku Gothic New", serif; font-size: 19px; font-weight: 500; min-width: 120px; text-align: center; color: #8a7358; letter-spacing: .06em; }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid #e4d9c6; border-radius: 12px; overflow: hidden; }
-.cal-dow { background: #f0e8da; text-align: center; font-size: 12px; padding: 6px 0; border-right: 1px solid #ede4d4; border-bottom: 1px solid #ede4d4; color: #8a7358; letter-spacing: .05em; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid #d8cab4; border-radius: 12px; overflow: hidden; }
+.cal-dow { background: #ece2d0; text-align: center; font-size: 13px; font-weight: 700; padding: 7px 0; border-right: 1px solid #e2d6c2; border-bottom: 1px solid #e2d6c2; color: #6e5c46; letter-spacing: .05em; }
 .cal-dow:nth-child(7n) { border-right: none; }
-.cal-dow.sat { color: #7d8ba0; } .cal-dow.sun { color: #ad7a66; }
-.cal-cell { min-height: 86px; border-right: 1px solid #f2ebdf; border-bottom: 1px solid #ede4d4; padding: 4px 5px; background: #fdfbf7; }
+.cal-dow.sat { color: #5f7499; } .cal-dow.sun { color: #a8543c; }
+.cal-cell { min-height: 96px; border-right: 1px solid #ece2d0; border-bottom: 1px solid #e2d6c2; padding: 5px 6px; background: #fff; }
 .cal-cell:nth-child(7n) { border-right: none; }
-.cal-cell.other { background: #f5f0e6; }
-.cal-cell.today { background: #f0e8da; }
-.cal-date { font-size: 11px; color: #ab9d8a; margin-bottom: 2px; }
-.cal-cell.today .cal-date { font-weight: bold; color: #8a7358; }
-.cal-cell.today .cal-date::after { content: " ・today"; font-size: 9px; letter-spacing: .08em; }
+.cal-cell.other { background: #f3ede1; }
+.cal-cell.other .cal-date { color: #c9bda9; }
+.cal-cell.today { background: #f6efe2; box-shadow: inset 0 0 0 2px #a68d6c; }
+.cal-date { font-size: 12px; font-weight: 700; color: #7a684f; margin-bottom: 4px; }
+.cal-cell.today .cal-date { color: #6e5c46; }
+.cal-cell.today .cal-date::after { content: " today"; font-size: 9px; letter-spacing: .08em; color: #a68d6c; }
 .chip {
-  display: block; font-size: 12px; padding: 2px 7px; margin-bottom: 3px; border-radius: 6px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; border-left: 3px solid;
+  display: block; font-size: 12.5px; font-weight: 600; color: #453a2c;
+  padding: 3px 8px; margin-bottom: 4px; border-radius: 7px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; border-left: 4px solid;
+  box-shadow: 0 1px 2px rgba(138,115,88,.12);
 }
-.chip.pri-high { background: #e2d5c1; border-left-color: #8a7358; }
-.chip.pri-mid { background: #efe7d8; border-left-color: #c4b18f; }
-.chip.pri-low { background: #f7f3ea; border-left-color: #ddd0bc; }
-.chip.done { opacity: .5; text-decoration: line-through; }
+.chip:hover { filter: brightness(.96); }
+.chip.pri-high { background: #dcc9a9; border-left-color: #6e5c46; }
+.chip.pri-mid { background: #ebdfc8; border-left-color: #a68d6c; }
+.chip.pri-low { background: #f5efe2; border-left-color: #cbb997; }
+.chip.done { opacity: .45; text-decoration: line-through; }
 
 /* week view */
 .week-day { margin-bottom: 16px; }
@@ -133,7 +148,7 @@ tr.done .task-title { text-decoration: line-through; }
   body { padding: 10px 8px; }
   .form-row .field { flex: 1 1 45%; min-width: 0 !important; }
   .form-row .field:first-child { flex: 1 1 100%; }
-  .cal-cell { min-height: 64px; }
+  .cal-cell { min-height: 70px; }
   .chip { font-size: 11px; }
   .tab { padding: 8px 14px; }
 }
@@ -187,6 +202,7 @@ tr.done .task-title { text-decoration: line-through; }
         <option value="deadline">並び順：締切が近い順</option>
         <option value="priority">並び順：優先度が高い順</option>
         <option value="status">並び順：ステータス順</option>
+        <option value="manual">並び順：手動（自由に並び替え）</option>
       </select>
       <select id="filter-status" onchange="renderList()">
         <option value="">全ステータス</option>
@@ -200,10 +216,13 @@ tr.done .task-title { text-decoration: line-through; }
       </select>
       <select id="filter-project" onchange="renderList()"><option value="">全案件</option></select>
       <label style="font-size:13px;color:#a08c70"><input type="checkbox" id="filter-hidedone" onchange="renderList()"> 完了を隠す</label>
+      <button class="small danger hidden" id="btn-del-selected" onclick="deleteSelected()">選択を削除</button>
     </div>
     <div class="table-wrap">
-    <table>
+    <table id="task-table">
       <thead><tr>
+        <th class="handle-col" style="cursor:default">並び</th>
+        <th class="sel-col" style="cursor:default"><input type="checkbox" id="sel-all" onchange="toggleSelectAll(this.checked)" title="表示中を全選択"></th>
         <th onclick="setSort('deadline')">締切 <span class="arrow" id="ar-deadline"></span></th>
         <th onclick="setSort('title')">タスク名 <span class="arrow" id="ar-title"></span></th>
         <th onclick="setSort('project')">案件 <span class="arrow" id="ar-project"></span></th>
@@ -215,7 +234,7 @@ tr.done .task-title { text-decoration: line-through; }
       <tbody id="list-body"></tbody>
     </table>
     </div>
-    <div class="note">締切超過は赤字、3日以内は橙字。「カレンダーに追加」を押すとGoogleカレンダーの登録画面が開きます（終日予定）。並び順はドロップダウンで変更でき、列の見出しをクリックすると個別に並び替えもできます。データはこのブラウザ内に保存されるため、端末を替える場合は「バックアップ」→「復元」で移行してください。</div>
+    <div class="note">締切超過は赤字、3日以内は橙字。「カレンダーに追加」を押すとGoogleカレンダーの登録画面が開きます（終日予定）。並び順を「手動」にすると、行のドラッグまたは▲▼ボタンで自由に並び替えられます（並びは保存されます）。左端のチェックボックスで選択し、まとめて削除もできます。データはこのブラウザ内に保存されるため、端末を替える場合は「バックアップ」→「復元」で移行してください。</div>
   </div>
 
   <!-- 週間ビュー -->
@@ -280,6 +299,8 @@ let sortKey = null, sortAsc = true;
 let sortMode = "deadline";
 let calYear, calMonth;
 let weekStart;
+let selected = new Set();
+let dragId = null;
 
 /* ===== 永続化 ===== */
 function load() {
@@ -464,7 +485,59 @@ function deleteTaskFromModal() {
   if (!t) return;
   if (!confirm(`「${t.title}」を削除しますか？`)) return;
   tasks = tasks.filter(x => x.id !== id);
+  selected.delete(id);
   save(); renderAll(); closeModal();
+}
+
+/* ===== 選択・一括削除 ===== */
+function toggleSelect(id, on) {
+  if (on) selected.add(id); else selected.delete(id);
+  updateSelUi();
+}
+function toggleSelectAll(on) {
+  const vis = sortedFilteredTasks().map(t => t.id);
+  vis.forEach(id => on ? selected.add(id) : selected.delete(id));
+  renderList();
+}
+function updateSelUi() {
+  const btn = document.getElementById("btn-del-selected");
+  btn.classList.toggle("hidden", selected.size === 0);
+  btn.textContent = `選択を削除（${selected.size}件）`;
+  const vis = sortedFilteredTasks().map(t => t.id);
+  document.getElementById("sel-all").checked = vis.length > 0 && vis.every(id => selected.has(id));
+}
+function deleteSelected() {
+  if (!selected.size) return;
+  if (!confirm(`選択した${selected.size}件のタスクを削除しますか？`)) return;
+  tasks = tasks.filter(t => !selected.has(t.id));
+  selected.clear();
+  save(); renderAll();
+  toast("削除しました");
+}
+
+/* ===== 手動並び替え ===== */
+function moveTask(id, dir) {
+  const vis = sortedFilteredTasks().map(t => t.id);
+  const i = vis.indexOf(id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= vis.length) return;
+  const neighborId = vis[j];
+  const from = tasks.findIndex(t => t.id === id);
+  const item = tasks.splice(from, 1)[0];
+  let to = tasks.findIndex(t => t.id === neighborId);
+  if (dir > 0) to += 1;
+  tasks.splice(to, 0, item);
+  save(); renderList();
+}
+function dropOn(targetId) {
+  if (!dragId || dragId === targetId) { dragId = null; return; }
+  const from = tasks.findIndex(t => t.id === dragId);
+  if (from < 0) { dragId = null; return; }
+  const item = tasks.splice(from, 1)[0];
+  const to = tasks.findIndex(t => t.id === targetId);
+  tasks.splice(to < 0 ? tasks.length : to, 0, item);
+  dragId = null;
+  save(); renderList();
 }
 function cycleStatus(id) {
   const t = tasks.find(x => x.id === id);
@@ -496,6 +569,7 @@ function sortedFilteredTasks() {
     (!fj || t.project === fj) &&
     (!hd || t.status !== "完了")
   );
+  if (!sortKey && sortMode === "manual") return list;
   const dl = t => t.deadline || "9999-12-31";
   const cmpDl = (a, b) => dl(a) < dl(b) ? -1 : dl(a) > dl(b) ? 1 : 0;
   list.sort((a, b) => {
@@ -531,10 +605,13 @@ function renderList() {
   ["deadline","title","project","priority"].forEach(k => {
     document.getElementById("ar-" + k).textContent = (sortKey === k) ? (sortAsc ? "▲" : "▼") : "";
   });
+  const manual = (!sortKey && sortMode === "manual");
+  document.getElementById("task-table").classList.toggle("manual", manual);
   const body = document.getElementById("list-body");
   const list = sortedFilteredTasks();
   if (!list.length) {
-    body.innerHTML = '<tr><td colspan="7" class="empty">タスクがありません。上のフォームから追加してください。</td></tr>';
+    body.innerHTML = '<tr><td colspan="9" class="empty">タスクがありません。上のフォームから追加してください。</td></tr>';
+    updateSelUi();
     return;
   }
   body.innerHTML = list.map(t => {
@@ -554,7 +631,9 @@ function renderList() {
       : t.calAdded
         ? `<span class="cal-added">✓ 追加済</span> <button class="small ghost" onclick="addToCalendar('${t.id}')" title="もう一度開く">再追加</button>`
         : `<button class="small ghost" onclick="addToCalendar('${t.id}')">カレンダーに追加</button>`;
-    return `<tr class="${t.status === "完了" ? "done" : ""}">
+    return `<tr data-id="${t.id}" class="${t.status === "完了" ? "done" : ""}">
+      <td class="handle-col"><span class="drag-handle" title="ドラッグで移動">≡</span><button class="mini-move" onclick="moveTask('${t.id}',-1)" title="上へ">▲</button><button class="mini-move" onclick="moveTask('${t.id}',1)" title="下へ">▼</button></td>
+      <td class="sel-col"><input type="checkbox" ${selected.has(t.id) ? "checked" : ""} onchange="toggleSelect('${t.id}', this.checked)"></td>
       <td class="${dlClass}">${dl}</td>
       <td><span class="task-title">${esc(t.title)}</span>${t.memo ? `<div class="memo-preview" title="${esc(t.memo)}">📝 ${esc(t.memo)}</div>` : ""}</td>
       <td>${esc(t.project) || "—"}</td>
@@ -564,6 +643,16 @@ function renderList() {
       <td><button class="small ghost" onclick="openEdit('${t.id}')">編集</button></td>
     </tr>`;
   }).join("");
+  if (manual) {
+    body.querySelectorAll("tr[data-id]").forEach(row => {
+      row.draggable = true;
+      row.addEventListener("dragstart", e => { dragId = row.dataset.id; e.dataTransfer.effectAllowed = "move"; });
+      row.addEventListener("dragover", e => { e.preventDefault(); row.classList.add("drag-over"); });
+      row.addEventListener("dragleave", () => row.classList.remove("drag-over"));
+      row.addEventListener("drop", e => { e.preventDefault(); row.classList.remove("drag-over"); dropOn(row.dataset.id); });
+    });
+  }
+  updateSelUi();
 }
 
 /* ===== 週間ビュー ===== */
